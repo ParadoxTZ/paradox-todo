@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>添加任务</title>
+  <style>
+    :root {
+      --cream: #FDF8F3;
+      --sand: #F5EDE4;
+      --sage: #87A878;
+      --sage-dark: #5C7A4D;
+      --charcoal: #3D3D3D;
+      --text-muted: #7A7A7A;
+      --priority-high: #D95D5D;
+      --priority-medium: #E8A94E;
+      --priority-low: #6B9E6D;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.2s;
+    }
+
+    .close-btn:hover { background: rgba(255,255,255,0.3); }
+
+    .form {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .input {
+      padding: 14px 16px;
+      border: 2px solid var(--sand);
+      border-radius: 12px;
+      font-size: 15px;
+      background: white;
+      transition: border-color 0.2s;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--sage);
+    }
+
+    .date-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-part {
+      width: 90px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .date-separator {
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    .priority-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .priority-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--sand);
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .priority-btn:hover {
+      border-color: var(--sage-light);
+    }
+
+    .priority-btn.active {
+      border-color: currentColor;
+      background: currentColor;
+      color: white;
+    }
+
+    .priority-btn[data-value="high"] { color: var(--priority-high); }
+    .priority-btn[data-value="medium"] { color: var(--priority-medium); }
+    .priority-btn[data-value="low"] { color: var(--priority-low); }
+
+    .submit-btn {
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(135, 168, 120, 0.3);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="title">添加新任务</span>
+    <button class="close-btn" onclick="cancel()">×</button>
+  </div>
+
+  <div class="form">
+    <div class="input-group">
+      <label class="label">任务内容</label>
+      <input type="text" class="input" id="taskText" placeholder="输入任务描述..." autofocus>
+    </div>
+
+    <div class="input-group">
+      <label class="label">截止日期</label>
+      <div class="date-inputs">
+        <input type="number" class="input date-part" id="dateYear" placeholder="年" min="2024" max="2100">
+        <span class="date-separator">/</span>
+        <input type="number" class="input date-part" id="dateMonth" placeholder="月" min="1" max="12">
+        <span class="date-separator">/</span>
+        <input type="number" class="input date-part" id="dateDay" placeholder="日" min="1" max="31">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label class="label">优先级</label>
+      <div class="priority-btns">
+        <button class="priority-btn" data-value="high" onclick="selectPriority('high')">🔴 高</button>
+        <button class="priority-btn active" data-value="medium" onclick="selectPriority('medium')">🟡 中</button>
+        <button class="priority-btn" data-value="low" onclick="selectPriority('low')">🟢 低</button>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitTask()">添加任务</button>
+    <p class="hint">添加后窗口将自动最小化到托盘</p>
+  </div>
+
+  <script>
+    let selectedPriority = 'medium';
+
+    function selectPriority(value) {
+      selectedPriority = value;
+      document.querySelectorAll('.priority-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === value);
+      });
+    }
+
+    // 日期自动跳转
+    document.getElementById('dateYear').addEventListener('input', function() {
+      if (this.value.length >= 4) {
+        document.getElementById('dateMonth').focus();
+      }
+    });
+
+    document.getElementById('dateMonth').addEventListener('input', function() {
+      if (this.value.length >= 2) {
+        document.getElementById('dateDay').focus();
+      }
+    });
+
+    document.getElementById('dateDay').addEventListener('input', function() {
+      if (this.value.length >= 2) {
+        document.querySelector('.submit-btn').focus();
+      }
+    });
+
+    // 提交任务
+    async function submitTask() {
+      const text = document.getElementById('taskText').value.trim();
+      if (!text) {
+        document.getElementById('taskText').focus();
+        return;
+      }
+
+      const year = document.getElementById('dateYear').value;
+      const month = document.getElementById('dateMonth').value;
+      const day = document.getElementById('dateDay').value;
+
+      let dueDate = null;
+      if (year && month && day) {
+        dueDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      }
+
+      const task = {
+        text: text,
+        dueDate: dueDate,
+        priority: selectedPriority
+      };
+
+      try {
+        await window.api.addTask(task);
+        window.api.minimizeToTray();
+      } catch (e) {
+        // 降级保存
+        const tasks = JSON.parse(localStorage.getItem('paradoxTodoTasks') || '[]');
+        tasks.unshift({
+          id: Date.now(),
+          ...task,
+          completed: false
+        });
+        localStorage.setItem('paradoxTodoTasks', JSON.stringify(tasks));
+        window.api.minimizeToTray();
+      }
+    }
+
+    function cancel() {
+      window.api.minimizeToTray();
+    }
+
+    // 回车提交
+    document.getElementById('taskText').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitTask();
+      }
+    });
+  </script>
+</body>
+</html>

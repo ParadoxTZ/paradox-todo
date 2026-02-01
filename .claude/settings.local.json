@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where:*)",
+      "Bash(winget install:*)",
+      "Bash(rustc:*)",
+      "Bash(if not exist \"E:/AIAPP/MyTODO/src-tauri/icons\" mkdir \"E:/AIAPP/MyTODO/src-tauri/icons\")",
+      "Bash(pip install:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(node --version)",
+      "Bash(winget list:*)",
+      "Bash(npm install:*)",
+      "Bash(reg query:*)",
+      "Bash(powershell:*)",
+      "Bash(curl:*)",
+      "Bash(%TEMP%WebView2Setup.exe /silent /install)",
+      "Bash(npm init:*)",
+      "Bash(npm run make)",
+      "Bash(node:*)",
+      "Bash(tasklist)",
+      "Bash(pkill:*)",
+      "Bash(du -sh \"E:/AIAPP/MyTODO/out/make/zip/win32/x64/\"*)",
+      "Bash(git init)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
