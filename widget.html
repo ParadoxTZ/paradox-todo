@@ -167,6 +167,15 @@
     .task-due.overdue { color: var(--priority-high); }
     .task-due.urgent { color: var(--priority-medium); }
 
+    .task-location {
+      font-size: 11px;
+      color: var(--sage-dark);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .delete-btn {
       opacity: 0;
       background: none;
@@ -237,7 +246,8 @@
           <div class="checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${task.id})"></div>
           <div class="task-content">
             <div class="task-text">${escapeHtml(task.text)}</div>
-            ${task.dueDate ? `<div class="task-due ${getDueClass(task.dueDate)}">📅 ${formatDateDisplay(task.dueDate)}</div>` : ''}
+            ${task.dueDate ? `<div class="task-due ${getDueClass(task.dueDate)}">📅 ${formatDateDisplay(task.dueDate)} ${task.time ? task.time : ''}</div>` : ''}
+            ${task.location ? `<div class="task-location">📍 ${escapeHtml(task.location)}</div>` : ''}
           </div>
           <button class="delete-btn" onclick="deleteTask(${task.id})">×</button>
         </div>
@@ -249,9 +259,11 @@
 
     function formatDateDisplay(dateStr) {
       if (!dateStr) return '';
-      // 直接显示月日
       const [year, month, day] = dateStr.split('-');
-      return `${parseInt(month)}月${parseInt(day)}日`;
+      const date = new Date(year, month - 1, day);
+      const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const weekday = weekdays[date.getDay()];
+      return `${parseInt(month)}月${parseInt(day)}日 ${weekday}`;
     }
 
     function getDueClass(dateStr) {

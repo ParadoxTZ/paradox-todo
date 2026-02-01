@@ -99,7 +99,7 @@ function createAddWindow() {
   // 获取屏幕尺寸，计算中心位置
   const { width, height } = require('electron').screen.getPrimaryDisplay().workAreaSize;
   const windowWidth = 500;
-  const windowHeight = 420;
+  const windowHeight = 540;
   const x = Math.round((width - windowWidth) / 2);
   const y = Math.round((height - windowHeight) / 2);
 

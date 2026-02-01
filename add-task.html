@@ -107,6 +107,20 @@
       font-size: 18px;
     }
 
+    .time-input {
+      padding: 12px 16px;
+      border: 2px solid var(--sand);
+      border-radius: 12px;
+      font-size: 15px;
+      background: white;
+      width: 140px;
+    }
+
+    .time-input:focus {
+      outline: none;
+      border-color: var(--sage);
+    }
+
     .priority-btns {
       display: flex;
       gap: 10px;
@@ -170,12 +184,12 @@
 
   <div class="form">
     <div class="input-group">
-      <label class="label">任务内容</label>
+      <label class="label">任务内容 <span style="color:var(--priority-high)">*</span></label>
       <input type="text" class="input" id="taskText" placeholder="输入任务描述..." autofocus>
     </div>
 
     <div class="input-group">
-      <label class="label">截止日期</label>
+      <label class="label">截止日期 <span style="color:var(--text-muted)">(可选)</span></label>
       <div class="date-inputs">
         <input type="number" class="input date-part" id="dateYear" placeholder="年" min="2024" max="2100">
         <span class="date-separator">/</span>
@@ -183,6 +197,16 @@
         <span class="date-separator">/</span>
         <input type="number" class="input date-part" id="dateDay" placeholder="日" min="1" max="31">
       </div>
+    </div>
+
+    <div class="input-group">
+      <label class="label">时间 <span style="color:var(--text-muted)">(可选)</span></label>
+      <input type="time" class="time-input" id="taskTime">
+    </div>
+
+    <div class="input-group">
+      <label class="label">地点 <span style="color:var(--text-muted)">(可选)</span></label>
+      <input type="text" class="input" id="taskLocation" placeholder="输入地点...">
     </div>
 
     <div class="input-group">
@@ -244,9 +268,14 @@
         dueDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       }
 
+      const time = document.getElementById('taskTime').value;
+      const location = document.getElementById('taskLocation').value.trim();
+
       const task = {
         text: text,
         dueDate: dueDate,
+        time: time || null,
+        location: location || null,
         priority: selectedPriority
       };
 
