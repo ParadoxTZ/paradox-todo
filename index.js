@@ -6,6 +6,7 @@ let tray = null;
 let smallWindow = null;
 let addWindow = null;
 let tasks = [];
+let isAlwaysOnTop = false; // 默认不置顶
 
 // 数据文件路径
 const dataFilePath = path.join(app.getPath('userData'), 'tasks.json');
@@ -58,7 +59,7 @@ function createSmallWindow() {
     title: "Paradox's TODO",
     frame: false,
     transparent: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false, // 默认不置顶
     skipTaskbar: true,
     resizable: true,
     webPreferences: {
@@ -198,6 +199,19 @@ ipcMain.handle('minimize-widget', () => {
   if (smallWindow) {
     smallWindow.hide();
   }
+});
+
+ipcMain.handle('toggle-always-on-top', () => {
+  if (smallWindow) {
+    isAlwaysOnTop = !isAlwaysOnTop;
+    smallWindow.setAlwaysOnTop(isAlwaysOnTop);
+    return isAlwaysOnTop;
+  }
+  return false;
+});
+
+ipcMain.handle('get-always-on-top', () => {
+  return isAlwaysOnTop;
 });
 
 ipcMain.handle('minimize-to-tray', () => {

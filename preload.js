@@ -11,5 +11,7 @@ contextBridge.exposeInMainWorld('api', {
   getPriorityOrder: () => ipcRenderer.invoke('get-priority-order'),
   formatDate: (dateStr) => ipcRenderer.invoke('format-date', dateStr),
   getDueClass: (dateStr) => ipcRenderer.invoke('get-due-class', dateStr),
+  toggleAlwaysOnTop: () => ipcRenderer.invoke('toggle-always-on-top'),
+  getAlwaysOnTop: () => ipcRenderer.invoke('get-always-on-top'),
   onTasksUpdated: (callback) => ipcRenderer.on('tasks-updated', (event, tasks) => callback(tasks))
 });

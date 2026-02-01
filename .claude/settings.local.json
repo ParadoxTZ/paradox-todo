@@ -22,7 +22,13 @@
       "Bash(du -sh \"E:/AIAPP/MyTODO/out/make/zip/win32/x64/\"*)",
       "Bash(git init)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push -u origin main)",
+      "Bash(findstr:*)",
+      "Bash(du:*)",
+      "Bash(git push)"
     ]
   }
 }

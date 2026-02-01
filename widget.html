@@ -63,6 +63,25 @@
 
     .add-btn:hover { background: rgba(255,255,255,0.3); }
 
+    .pin-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-app-region: no-drag;
+      transition: background 0.2s;
+    }
+
+    .pin-btn:hover { background: rgba(255,255,255,0.3); }
+    .pin-btn.pinned { background: rgba(255,255,255,0.9); color: var(--sage-dark); }
+
     .task-list {
       flex: 1;
       overflow-y: auto;
@@ -182,7 +201,10 @@
 <body>
   <div class="header">
     <span class="title">Paradox's TODO</span>
-    <button class="add-btn" onclick="openAddWindow()">+</button>
+    <div style="display: flex; gap: 8px;">
+      <button class="pin-btn" id="pinBtn" onclick="togglePin()" title="点击置顶">📌</button>
+      <button class="add-btn" onclick="openAddWindow()">+</button>
+    </div>
   </div>
   <div class="task-list" id="taskList"></div>
   <div class="stats" id="stats"></div>
@@ -294,6 +316,29 @@
       }
     }
 
+    async function togglePin() {
+      if (window.api.toggleAlwaysOnTop) {
+        const isPinned = await window.api.toggleAlwaysOnTop();
+        const pinBtn = document.getElementById('pinBtn');
+        pinBtn.classList.toggle('pinned', isPinned);
+        pinBtn.style.background = isPinned ? 'rgba(255,255,255,0.9)' : '';
+        pinBtn.style.color = isPinned ? 'var(--sage-dark)' : '';
+      }
+    }
+
+    // 初始化置顶状态
+    async function initPinState() {
+      if (window.api.getAlwaysOnTop) {
+        const isPinned = await window.api.getAlwaysOnTop();
+        const pinBtn = document.getElementById('pinBtn');
+        if (isPinned) {
+          pinBtn.classList.add('pinned');
+          pinBtn.style.background = 'rgba(255,255,255,0.9)';
+          pinBtn.style.color = 'var(--sage-dark)';
+        }
+      }
+    }
+
     // 监听任务更新
     if (window.api.onTasksUpdated) {
       window.api.onTasksUpdated((tasks) => {
@@ -305,6 +350,7 @@
     window.addEventListener('focus', loadTasks);
 
     loadTasks();
+    initPinState();
   </script>
 </body>
 </html>

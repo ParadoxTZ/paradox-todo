@@ -1,11 +1,13 @@
 const { MakerZIP } = require('@electron-forge/maker-zip');
+const path = require('path');
 
 module.exports = {
   packagerConfig: {
     asar: true,
     icon: './icon',
     overwrite: true,
-    platform: 'win32'
+    platform: 'win32',
+    out: path.join(__dirname, 'dist')
   },
   makers: [
     {

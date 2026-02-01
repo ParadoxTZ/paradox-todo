@@ -1,5 +1,6 @@
 {
   "name": "paradox-todo",
+  "productName": "ParadoxTODO",
   "version": "1.0.0",
   "main": "index.js",
   "description": "Paradox's TODO App",
